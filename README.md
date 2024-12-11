@@ -31,7 +31,7 @@
 
 ## 📝 General
 
-Collection on `9` modules in cpp.
+Collection on all C++ modules.
 
 ## 🛠️ Build
 
@@ -49,15 +49,15 @@ cd cplusplus/ex00 && make all
 
 ### Module 01
 
-Introduction module to the language. Teaches how to build basic classes and use on iostream.
+`Introduction` module to the language. Teaches how to build basic `classes` and use of `iostream`.
 
 ## Module 02
 
-Teaches memory allocation with `new` and `delete`.
+Teaches `memory` allocation with `new` and `delete` as well as handling of `files`.
 
 ## ♻️ Resources
 
-[LearnCpp](https://www.learncpp.com/) Covers everything from the absolute basics to advanced topics.
+[LearnCpp](https://www.learncpp.com/) covers everything from the absolute basics to advanced topics.
 
 [CppReference](https://en.cppreference.com/w/) best reference documentation with simple search.
 
