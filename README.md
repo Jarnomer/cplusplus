@@ -51,7 +51,7 @@ cd cplusplus/ex00 && make all
 
 `Introduction` module to the language. Teaches how to build basic `classes` and use of `iostream`.
 
-## Module 02
+### Module 02
 
 Teaches `memory` allocation with `new` and `delete` as well as handling of `files`.
 
