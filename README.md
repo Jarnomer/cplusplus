@@ -17,3 +17,57 @@
     <img src="https://img.shields.io/badge/Type-Solo-violet?style=for-the-badge" alt="type">
   <img src="https://img.shields.io/github/last-commit/Jarnomer/cplusplus/main?style=for-the-badge&color=red" alt="GitHub last commit (branch)">
 </p>
+
+<div align="center">
+
+## Table of Contents
+[📝 General](#-general)
+[🛠️ Build](#️-build)
+[⚡ Usage](#-usage)
+[🚀 Details](#-details)
+[♻️ Resources](#️-resources)
+
+</div>
+
+## 📝 General
+
+Collection on `9` modules in cpp.
+
+## 🛠️ Build
+
+GNU `make` and `gcc` are required to build and compile each excersice.
+
+```bash
+git clone https://github.com/Jarnomer/cplusplus.git
+```
+
+```bash
+cd cplusplus/ex00 && make all
+```
+
+## 🚀 Details
+
+### Module 01
+
+Introduction module to the language. Teaches how to build basic classes and use on iostream.
+
+## Module 02
+
+Teaches memory allocation with `new` and `delete`.
+
+## ♻️ Resources
+
+[LearnCpp](https://www.learncpp.com/) Covers everything from the absolute basics to advanced topics.
+
+[CppReference](https://en.cppreference.com/w/) best reference documentation with simple search.
+
+[The C++ Programming language](https://www.youtube.com/watch?v=LGOgNqkRMs0&list=PLvv0ScY6vfd8j-tlhYVPYgiIyXduu6m-L) excellent video playlist by Mike Shah.
+
+
+## 4️⃣2️⃣ Footer
+
+For my other 42 projects and general information, please refer the [Hive42](https://github.com/Jarnomer/Hive42) page.
+
+I have also created error handling [unit testers](https://github.com/Jarnomer/42Testers) for `pipex`, `so_long` and `cub3D`.
+
+### Cheers and good luck! 🥳
