@@ -42,7 +42,7 @@ git clone https://github.com/Jarnomer/cplusplus.git
 ```
 
 ```bash
-cd cplusplus/ex00 && make all
+cd cplusplus/mod00/ex00 && make all
 ```
 
 ## 🚀 Details
