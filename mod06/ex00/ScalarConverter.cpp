@@ -10,9 +10,10 @@ static void printFloat(double number) {
       (number < std::numeric_limits<float>::min() ||
        number > std::numeric_limits<float>::max())) {
     std::cout << "float: Impossible\n";
-  }
-  std::cout << "float: " << std::fixed << std::setprecision(1)
+  } else {
+    std::cout << "float: " << std::fixed << std::setprecision(1)
             << static_cast<float>(number) << "f" << "\n";
+  }
 }
 
 static void printInt(int64_t number) {
