@@ -31,7 +31,7 @@
 
 ## 📝 General
 
-Collection on all C++ modules.
+Collection on all C++ modules 00-09.
 
 ## 🛠️ Build
 
@@ -49,11 +49,39 @@ cd cplusplus/mod00/ex00 && make all
 
 ### Module 01
 
-`Introduction` module to the language. Teaches how to build basic `classes` and use of `iostream`.
+Teaches the basics of `classes` and `iostream`.
 
 ### Module 02
 
-Teaches `memory` allocation with `new` and `delete` as well as handling of `files`.
+Teaches `memory allocation` with new and delete.
+
+### Module 03
+
+Teaches 'inheritance' with multiple classes.
+
+### Module 04
+
+What?
+
+### Module 05
+
+Teaches 'expection handling' with try-catch and throw.
+
+### Module 06
+
+What?
+
+### Module 07
+
+Teaches 'template functions' within header files.
+
+### Module 08
+
+What?
+
+### Module 09
+
+What?
 
 ## ♻️ Resources
 
@@ -62,7 +90,6 @@ Teaches `memory` allocation with `new` and `delete` as well as handling of `file
 [CppReference](https://en.cppreference.com/w/) best reference documentation with simple search.
 
 [The C++ Programming language](https://www.youtube.com/watch?v=LGOgNqkRMs0&list=PLvv0ScY6vfd8j-tlhYVPYgiIyXduu6m-L) excellent video playlist by Mike Shah.
-
 
 ## 4️⃣2️⃣ Footer
 
