@@ -7,3 +7,4 @@ sed
 harl
 harlFilter
 *.o
+*.vscode

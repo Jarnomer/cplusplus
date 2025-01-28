@@ -4,7 +4,7 @@ RM     := rm -rf
 CLEAR  := printf "\033c"
 
 CC     := c++
-CFLAGS := -Wall -Werror -Wextra
+CFLAGS := -Wall -Werror -Wextra -std=c++17
 
 SOURCES := main.cpp \
            BitcoinExchange.cpp

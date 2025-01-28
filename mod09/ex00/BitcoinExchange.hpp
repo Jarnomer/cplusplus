@@ -23,13 +23,12 @@ public: // methods
   void printRates(const std::string &fileName);
 
 private: // utils
-  void importInfo(const std::string &date, double amount);
   void printRate(const std::string &date, double amount) const;
   std::string trimWhiteSpace(std::string &line) const;
   bool isValidDate(const std::string &date) const;
   bool isValidValue(double amount) const;
 
 private: // parser
-  void parseFile(const std::string &fileName, char delim,
+  void readInput(const std::string &fileName, char delim,
                  const std::function<void(const std::string &, double)> &func);
 };
