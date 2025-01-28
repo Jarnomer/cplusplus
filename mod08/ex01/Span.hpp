@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 #include <limits>
+#include <random>
 #include <stdexcept>
 #include <vector>
 
@@ -22,6 +23,7 @@ public: // deconstructor
 
 public: // methods
   void addNumber(int number);
+  void addNumbers(unsigned int count);
   int shortestSpan(void);
   int longestSpan(void);
 };

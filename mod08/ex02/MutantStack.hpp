@@ -14,7 +14,9 @@ public: // constructor
   }
 
 public: // copy constructor
-  MutantStack(const MutantStack &other) = delete;
+  MutantStack(MutantStack const &other) : std::stack<T>(other) {
+    std::cout << "Copy constructor called\n";
+  }
 
 public: // copy assignment
   MutantStack &operator=(const MutantStack &other) {
@@ -28,7 +30,7 @@ public: // copy assignment
 public: // deconstructor
   ~MutantStack() { std::cout << "Deconstructor called\n"; }
 
-public: // iterators (std::deque)
+public: // iterators
   iterator begin() { return this->c.begin(); }
   iterator end() { return this->c.end(); }
 };

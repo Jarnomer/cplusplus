@@ -28,6 +28,19 @@ void Span::addNumber(int number) {
   }
 }
 
+void Span::addNumbers(unsigned int count) {
+  if (vec.size() + count > n) {
+    throw std::runtime_error("Max size reached!");
+  } else {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(-10000, 10000);
+    for (size_t i = 0; i < count; ++i) {
+      addNumber(dist(gen));
+    }
+  }
+}
+
 int Span::shortestSpan(void) {
   if (vec.size() <= 1) {
     throw std::runtime_error("No enough elements!");
@@ -35,7 +48,7 @@ int Span::shortestSpan(void) {
     std::vector<int> sorted = vec;
     std::sort(sorted.begin(), sorted.end());
     int min = std::numeric_limits<int>::max();
-    for (size_t i = 1; i < sorted.size(); ++i) {
+    for (size_t i = 1; i < sorted.size(); i++) {
       min = std::min(min, sorted[i] - sorted[i - 1]);
     }
     return min;
