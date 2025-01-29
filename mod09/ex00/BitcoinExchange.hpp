@@ -14,8 +14,6 @@ private:
 
 public: // constructors
   BitcoinExchange(void);
-
-public: // deconstructor
   ~BitcoinExchange(void);
 
 public: // methods
@@ -24,9 +22,10 @@ public: // methods
 
 private: // utils
   void printRate(const std::string &date, double amount) const;
-  std::string trimWhiteSpace(std::string &line) const;
   bool isValidDate(const std::string &date) const;
+  bool isLeapYear(int year) const;
   bool isValidValue(double amount) const;
+  std::string trimWhiteSpace(std::string &line) const;
 
 private: // parser
   void readInput(const std::string &fileName, char delim,

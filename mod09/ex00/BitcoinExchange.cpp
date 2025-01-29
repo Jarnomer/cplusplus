@@ -65,24 +65,6 @@ void BitcoinExchange::importData(const std::string &fileName) {
   });
 }
 
-bool isLeapYear(int year) {
-  return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
-}
-
-bool isValidDay(int year, int month, int day) {
-  int days[] = {31, (isLeapYear(year) ? 29 : 28),
-    31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-  return (day >= 1 && day <= days[month - 1]);
-}
-
-bool isValidMonth(int month) {
-  return (month >= 1 && month <= 12);
-}
-
-bool isValidMonthAndDay(int year, int month, int day) {
-  return (isValidMonth(month) && isValidDay(year, month, day));
-}
-
 bool BitcoinExchange::isValidDate(const std::string &date) const {
   std::regex pattern(R"((\d{4})-(\d{2})-(\d{2}))");
   std::smatch match;
@@ -93,7 +75,9 @@ bool BitcoinExchange::isValidDate(const std::string &date) const {
     int year = std::stoi(match[1].str());
     int month = std::stoi(match[2].str());
     int day = std::stoi(match[3].str());
-    if (!isValidMonthAndDay(year, month, day)) {
+    int days[] = {31, (isLeapYear(year) ? 29 : 28),
+      31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (month < 1 || month > 12 || day < 1 || day > days[month - 1]) {
       std::cerr << "Invalid date: " << date << "\n";
       return false;
     } else {
@@ -109,6 +93,10 @@ bool BitcoinExchange::isValidValue(double amount) const {
   } else {
     return true;
   }
+}
+
+bool BitcoinExchange::isLeapYear(int year) const {
+  return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
 }
 
 std::string BitcoinExchange::trimWhiteSpace(std::string &str) const {
