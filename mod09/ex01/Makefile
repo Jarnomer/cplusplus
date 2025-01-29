@@ -18,6 +18,10 @@ re: fclean all
 run: all
 	@$(CLEAR)
 	@./$(NAME) "8 9 * 9 - 9 - 9 - 4 - 1 +"
+	@./$(NAME) "9 9 9 * -"
+	@./$(NAME) "9 9 9 *"
+	@./$(NAME) "19 9 9"
+	@./$(NAME) "9 9 9 9 9 9 9 9 9 9 9 * * * * * * * * * * * *"
 
 clean:
 	$(RM) $(OBJECTS)

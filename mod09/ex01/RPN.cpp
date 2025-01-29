@@ -20,7 +20,12 @@ void RPN::calculate(const std::string &expression) {
 
 void RPN::appendStack(const std::string &value) {
   if (!number.empty()) {
-    stack.push(std::stoi(value));
+    int result = std::stoi(value);
+    if (result < 0 || result > 9) {
+      throw std::invalid_argument("Syntax error");
+    } else {
+      stack.push(result);
+    }
   }
 }
 
@@ -32,17 +37,20 @@ bool RPN::isValidOperation(char c) {
   }
 }
 
-void RPN::performCalculation(char c) {
+void RPN::performCalculation(char op) {
   int a, b, result;
   b = stack.top();
   stack.pop();
   a = stack.top();
   stack.pop();
-  result = performOperation(a, b, c);
+  result = performOperation(a, b, op);
   stack.push(result);
 }
 
 int RPN::performOperation(int a, int b, char op) {
+  if (willOverflow(a, b, op)) {
+    throw std::overflow_error("Arithmetic overflow");
+  }
   switch (op) {
   case '+':
     return a + b;
@@ -51,13 +59,24 @@ int RPN::performOperation(int a, int b, char op) {
   case '*':
     return a * b;
   case '/':
-    if (b == 0) {
-      throw std::invalid_argument("Division by zero");
-    } else {
-      return a / b;
-    }
+    return a / b;
   default:
     throw std::invalid_argument("Syntax error");
+  }
+}
+
+bool RPN::willOverflow(int a, int b, char op) {
+  switch (op) {
+  case '*':
+    return (b != 0 && a > std::numeric_limits<int>::max() / b);
+  case '+':
+    return (a > std::numeric_limits<int>::max() - b);
+  case '-':
+    return (a < std::numeric_limits<int>::min() + b);
+  case '/':
+    return (b == 0);
+  default:
+    return false;
   }
 }
 

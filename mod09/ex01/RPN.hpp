@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <iostream>
+#include <limits>
 #include <stack>
 #include <stdexcept>
 
@@ -24,5 +25,6 @@ private:
   static bool isValidOperation(char c);
   static void performCalculation(char c);
   static int performOperation(int a, int b, char op);
+  static bool willOverflow(int a, int b, char op);
   static void printResult(void);
 };
