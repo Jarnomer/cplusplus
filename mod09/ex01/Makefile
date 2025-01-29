@@ -29,7 +29,7 @@ run: all
 	@./$(NAME) "3 3 * 2 * 2 *"    # 36
 	@./$(NAME) "5 4 + 3 -"        # 6
 
-# ❌ Invalid Test Cases
+#	❌ Invalid Test Cases
 	@./$(NAME) "10 9 *"           # Error: Syntax error (Numbers must be between 0 and 9)
 	@./$(NAME) "9 9 9 9 9 9 9 9 9 9 9 * * * * * * * * * * * *"  # Error: Arithmetic overflow
 	@./$(NAME) "9 0 /"            # Error: Arithmetic overflow (Division by zero)
