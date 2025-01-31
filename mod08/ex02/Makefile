@@ -6,8 +6,7 @@ CLEAR  := printf "\033c"
 CC     := c++
 CFLAGS := -Wall -Werror -Wextra
 
-SOURCES := main.cpp \
-           Span.cpp
+SOURCES := main.cpp
 
 OBJECTS := $(SOURCES:.cpp=.o)
 

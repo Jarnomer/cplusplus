@@ -6,5 +6,7 @@ uviolence
 sed
 harl
 harlFilter
+stack
+PmergeMe
 *.o
 *.vscode
