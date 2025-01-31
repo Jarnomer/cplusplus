@@ -17,13 +17,17 @@ public: // constructrors
   Span(unsigned int n);
   Span(const Span &other);
   Span &operator=(const Span &other);
-
-public: // deconstructor
   ~Span(void);
 
 public: // methods
   void addNumber(int number);
-  void addNumbers(unsigned int count);
   int shortestSpan(void);
   int longestSpan(void);
+
+public: // addNumbers template
+  template<typename It> void addNumbers(It begin, It end) {
+    for (auto it = begin; it != end; ++it) {
+      addNumber(*it);
+    }
+  }
 };

@@ -1,4 +1,4 @@
-#include <Span.hpp>
+#include "Span.hpp"
 
 Span::Span(unsigned int n) : n(n) {
   std::cout << "Parametric constructor called\n";
@@ -25,19 +25,6 @@ void Span::addNumber(int number) {
     throw std::out_of_range("Max size reached!");
   } else {
     vec.push_back(number);
-  }
-}
-
-void Span::addNumbers(unsigned int count) {
-  if (vec.size() + count > n) {
-    throw std::runtime_error("Max size reached!");
-  } else {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist(-10000, 10000);
-    for (size_t i = 0; i < count; ++i) {
-      addNumber(dist(gen));
-    }
   }
 }
 
