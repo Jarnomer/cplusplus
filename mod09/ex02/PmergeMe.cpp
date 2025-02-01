@@ -1,22 +1,39 @@
 #include "PmergeMe.hpp"
 
 std::vector<int> PmergeMe::intVector;
-std::list<int> PmergeMe::intList;
-std::string PmergeMe::containerType;
-size_t PmergeMe::unitSize;
+std::deque<int> PmergeMe::intDeque;
+std::unordered_set<int> PmergeMe::uniques;
 
-std::chrono::time_point<std::chrono::high_resolution_clock> PmergeMe::timer;
+void PmergeMe::fordJohnsonSort(int argc, char **argv) {
+    time_point_t vecStart, vecEnd, listStart, listEnd;
+    parseArguments(argc, argv);
+    printNumbers("Before", intVector);
+    vecStart = Clock::now();
+    sortNumbers(intVector);
+    vecEnd = Clock::now();
+    listStart = Clock::now();
+    sortNumbers(intDeque);
+    listEnd = Clock::now();
+    printNumbers("After", intVector);
+    printDuration("std::vector", intVector, vecStart, vecEnd);
+    printDuration("std::deque", intDeque, vecStart, vecEnd);
+  }
 
-std::vector<int> PmergeMe::getIntVector(void) {
-  containerType = "std::vector";
-  unitSize = 1;
-  return intVector;
-}
-
-std::list<int> PmergeMe::getIntList(void) {
-  containerType = "std::list";
-  unitSize = 1;
-  return intList;
-}
-
-void PmergeMe::startTimer() { timer = Clock::now(); }
+void PmergeMe::parseArguments(int argc, char **argv) {
+    std::vector<std::string> args(argv + 1, argv + argc);
+    std::unordered_set<int> uniques;
+    for (const auto &str : args) {
+      int number = std::stoi(str);
+      if (number < 0) {
+        throw std::invalid_argument("Negative number");
+      } else if (!uniques.insert(number).second) {
+        throw std::invalid_argument("Duplicate number");
+      } else {
+        intVector.push_back(number);
+        intDeque.push_back(number);
+      }
+    }
+    if (uniques.size() <= 1) {
+      throw std::invalid_argument("Not enough numbers");
+    }
+  }

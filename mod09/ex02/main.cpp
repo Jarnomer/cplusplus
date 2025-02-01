@@ -6,8 +6,7 @@ int main(int argc, char **argv) {
     return 1;
   } else {
     try {
-      PmergeMe::fordJohnsonSort(argc, argv, PmergeMe::getIntVector());
-      // PmergeMe::fordJohnsonSort(argc, argv, PmergeMe::getIntList());
+      PmergeMe::fordJohnsonSort(argc, argv);
     } catch (const std::exception &e) {
       std::cerr << "Error: " << e.what() << "\n";
     }

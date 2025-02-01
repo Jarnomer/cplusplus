@@ -4,23 +4,22 @@
 #include <chrono>
 #include <iostream>
 #include <iterator>
-#include <list>
+#include <deque>
 #include <stdexcept>
 #include <unordered_set>
 #include <vector>
 
 class PmergeMe {
-private:
+
+private: // typedefs
   typedef std::chrono::high_resolution_clock Clock;
-  typedef std::chrono::time_point<Clock> timePoint;
+  typedef std::chrono::time_point<Clock> time_point_t;
   typedef std::chrono::microseconds us;
 
-private:
+private: // attributes
   static std::vector<int> intVector;
-  static std::list<int> intList;
-  static std::string containerType;
-  static timePoint timer;
-  static size_t unitSize;
+  static std::deque<int> intDeque;
+  static std::unordered_set<int> uniques;
 
 public: // constructors
   PmergeMe(void) = delete;
@@ -28,47 +27,15 @@ public: // constructors
   PmergeMe &operator=(const PmergeMe &other) = delete;
   ~PmergeMe(void) = delete;
 
-public: // getters
-  static std::vector<int> getIntVector(void);
-  static std::list<int> getIntList(void);
+public: // algorithm
+  static void fordJohnsonSort(int argc, char **argv);
 
-private: // utilities
-  static void startTimer(void);
-  static void printDuration(void);
-
-public: // algorithm template
-  template <typename T>
-  static void fordJohnsonSort(int argc, char **argv, T container) {
-    startTimer();
-    parseArguments(argc, argv, container);
-    displayNumbers("Before", container);
-    sortNumbers(container);
-    displayNumbers("After", container);
-    printDuration(container);
-  }
-
-private: // parse template
-  template <typename T>
-  static void parseArguments(int argc, char **argv, T &container) {
-    std::vector<std::string> args(argv + 1, argv + argc);
-    std::unordered_set<int> uniques;
-    for (const auto &str : args) {
-      int number = std::stoi(str);
-      if (number < 0) {
-        throw std::invalid_argument("Negative number");
-      } else if (!uniques.insert(number).second) {
-        throw std::invalid_argument("Duplicate number");
-      } else {
-        container.push_back(number);
-      }
-    }
-    if (container.size() <= 1) {
-      throw std::invalid_argument("Not enough numbers");
-    }
-  }
+private: // parser
+  static void parseArguments(int argc, char **argv);
 
 private: // sort template
-  template <typename Container> static void sortNumbers(Container &container) {
+  template <typename Container> 
+  static void sortNumbers(Container &container, size_t unitSize = 1) {
     int unitCount = container.size() / unitSize;
     if (unitCount < 2) {
       return;
@@ -80,8 +47,7 @@ private: // sort template
         std::swap_ranges(it, it + unitSize, it + unitSize);
       }
     }
-    unitSize *= 2;
-    sortNumbers(container);
+    sortNumbers(container, unitSize * 2);
     unitSize /= 2;
 
     // Container mainChain;
@@ -105,18 +71,19 @@ private: // sort template
 
   }
 
-private: // duration template
-  template <typename T> static void printDuration(const T &container) {
-    auto endTime = Clock::now();
-    auto duration = std::chrono::duration_cast<us>(endTime - timer);
+private: // duration print template
+  template <typename Container> 
+  static void printDuration(const std::string &containerType, Container &container, 
+                            time_point_t startTime, time_point_t endTime) {
+    auto duration = std::chrono::duration_cast<us>(endTime - startTime);
     std::cout << "Time to process a range of " << container.size()
-              << " units with " << containerType << " : " << duration.count()
-              << " μs" << std::endl;
+              << " numbers with " << containerType << " : "
+              << duration.count() << " μs" << std::endl;
   }
 
-public: // print template
-  template <typename T>
-  static void displayNumbers(const std::string &tag, const T &container) {
+public: // numbers print template
+  template <typename Container>
+  static void printNumbers(const std::string &tag, const Container &container) {
     std::cout << tag << " : ";
     for (const auto &num : container) {
       std::cout << num << " ";
