@@ -39,7 +39,7 @@ private: // private utils
 private:  // override template
   template <typename Container>
   static void override(Container &container, Container &main, Container &left,
-                       int unitSize, bool hasOddElem, int odd) {
+                       int elementSize, bool hasOddElem, int odd) {
 
     Container temp; // Temporary container to hold the final result.
 
@@ -53,7 +53,7 @@ private:  // override template
     for (auto it = main.begin(); it != main.end(); ++it) {
         // Find the corresponding element from container and insert the chunk into temp.
         auto itf = std::find(container.begin(), container.end(), *it);
-        temp.insert(temp.end(), itf - (unitSize - 1), itf + 1);
+        temp.insert(temp.end(), itf - (elementSize - 1), itf + 1);
     }
 
     // Append the leftover elements to temp.
@@ -66,8 +66,8 @@ private:  // override template
 private: // insert template
   template <typename Container>
   static void insert(Container &main, Container &pend, Container &left,
-                   Container &container, int unitSize, bool hasOddElem, int odd,
-                   size_t jc = 3, size_t insertCount = 0, size_t chunkSize = 0) {
+                     Container &container, int elementSize, bool hasOddElem, int odd,
+                     size_t jc = 3, size_t insertCount = 0, size_t insertRangeSize = 0) {
 
     if (pend.size() == 1) {
 
@@ -81,16 +81,16 @@ private: // insert template
       while (!pend.empty()) {
 
         // Size of the current chunk based on Jacobsthal sequence.
-        chunkSize = JacobsthalNumber(jc) - JacobsthalNumber(jc - 1);
+        insertRangeSize = JacobsthalNumber(jc) - JacobsthalNumber(jc - 1);
 
-        // Adjust if the chunk size exceeds the remaining pend.
-        if (chunkSize > pend.size()) {
-          chunkSize = pend.size();
+        // Adjust chunk size if it exceeds the remaining pend.
+        if (insertRangeSize > pend.size()) {
+          insertRangeSize = pend.size();
         }
 
         // Inner loop to process the current chunk.
         size_t searchRangeShift = 0;
-        while (chunkSize) {
+        while (insertRangeSize) {
 
           // Initial end-point.
           auto end = main.end();
@@ -102,7 +102,7 @@ private: // insert template
           }
 
           // Set pend element base on current Jacobsthal number.
-          auto pendElement = pend.begin() + chunkSize - 1;
+          auto pendElement = pend.begin() + insertRangeSize - 1;
 
           // Binary search the position of pend element from main.
           end = std::upper_bound(main.begin(), end, *pendElement);
@@ -118,7 +118,7 @@ private: // insert template
           insertCount++;
 
           // Reduce the size of chunk since element was moved.
-          chunkSize--;
+          insertRangeSize--;
 
         }
 
@@ -129,54 +129,54 @@ private: // insert template
     }
 
     // Override the original container with elements from main and leftover.
-    override(container, main, left, unitSize, hasOddElem, odd);
+    override(container, main, left, elementSize, hasOddElem, odd);
 }
 
 private: // sort template
   template <typename Container>
-  static void sortNumbers(Container &container, size_t recursionLevel = 1) {
+  static void sortNumbers(Container &container) {
 
-    static int unitSize = 1;
+    static int elementSize = 1;
 
-    int unitCount = container.size() / unitSize;
+    int elementCount = container.size() / elementSize;
 
-    if (unitCount < 2) {
+    if (elementCount < 2) {
       return;
     }
 
-    bool hasOddElem = (unitCount % 2 == 1) ? true : false;
+    bool hasOddElem = (elementCount % 2 == 1) ? true : false;
 
     auto begin = container.begin();
-    auto end = begin + ((unitSize * unitCount) - (hasOddElem * unitSize));
+    auto end = begin + ((elementSize * elementCount) - (hasOddElem * elementSize));
 
-    for (auto it = begin; it != end; it += (unitSize * 2)) {
-      if (*(it + (unitSize - 1)) > *(it + (unitSize * 2 - 1))) {
-        std::swap_ranges(it, it + unitSize, it + unitSize);
+    for (auto it = begin; it != end; it += (elementSize * 2)) {
+      if (*(it + (elementSize - 1)) > *(it + (elementSize * 2 - 1))) {
+        std::swap_ranges(it, it + elementSize, it + elementSize);
       }
     }
 
-    unitSize *= 2;
-    sortNumbers(container, ++recursionLevel);
-    unitSize /= 2;
+    elementSize *= 2;
+    sortNumbers(container);
+    elementSize /= 2;
 
     Container main;
     Container pend;
     Container left;
 
-    main.push_back(*(begin + unitSize - 1));
-    main.push_back(*(begin + unitSize * 2 - 1));
+    main.push_back(*(begin + elementSize - 1));
+    main.push_back(*(begin + elementSize * 2 - 1));
 
-    for (auto it = begin + unitSize * 2; it < end; it += unitSize) {
-      pend.push_back(*(it + unitSize - 1));
-      main.push_back(*(it + unitSize * 2 - 1));
-      std::advance(it, unitSize);
+    for (auto it = begin + elementSize * 2; it < end; it += elementSize) {
+      pend.push_back(*(it + elementSize - 1));
+      main.push_back(*(it + elementSize * 2 - 1));
+      std::advance(it, elementSize);
     }
 
-    left.insert(left.end(), end + (unitSize * hasOddElem), container.end());
+    left.insert(left.end(), end + (elementSize * hasOddElem), container.end());
 
     if (hasOddElem || !pend.empty()) {
-      insert(main, pend, left, container, unitSize, hasOddElem, 
-             hasOddElem ? *(end + unitSize - 1) : -1);
+      insert(main, pend, left, container, elementSize, hasOddElem, 
+             hasOddElem ? *(end + elementSize - 1) : -1);
     }
   }
 
