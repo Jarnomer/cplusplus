@@ -1,7 +1,5 @@
 #include "PmergeMe.hpp"
 
-const bool PmergeMe::debugMode = true; // debugging on/off
-
 std::vector<int> PmergeMe::intVector;
 std::deque<int> PmergeMe::intDeque;
 std::unordered_set<int> PmergeMe::uniques;

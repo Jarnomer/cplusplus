@@ -21,7 +21,6 @@ private: // attributes
   static std::vector<int> intVector;
   static std::deque<int> intDeque;
   static std::unordered_set<int> uniques;
-  static const bool debugMode;
 
 public: // constructors
   PmergeMe(void) = delete;
@@ -49,7 +48,7 @@ private:  // override template
         main.insert(end, odd);
     }
 
-    // Populate the temp container with chunks from the main.
+    // Populate the temporary container with chunks from the main.
     for (auto it = main.begin(); it != main.end(); ++it) {
         // Find the corresponding element from container and insert the chunk into temp.
         auto itf = std::find(container.begin(), container.end(), *it);
@@ -59,7 +58,7 @@ private:  // override template
     // Append the leftover elements to temp.
     temp.insert(temp.end(), left.begin(), left.end());
 
-    // Override the original container with the new temp container.
+    // Override the original container with temp.
     container = temp;
 }
 
@@ -80,7 +79,7 @@ private: // insert template
       // Loop till all elements from pend to are moved to main.
       while (!pend.empty()) {
 
-        // Size of the current chunk based on Jacobsthal sequence.
+        // Size of the current chunk of numbers to be inserted based on Jacobsthal sequence.
         insertRangeSize = JacobsthalNumber(jc) - JacobsthalNumber(jc - 1);
 
         // Adjust chunk size if it exceeds the remaining pend.
@@ -89,40 +88,38 @@ private: // insert template
         }
 
         // Inner loop to process the current chunk.
-        size_t searchRangeShift = 0;
         while (insertRangeSize) {
 
-          // Initial end-point.
+          // Initial end-point is the end of main.
           auto end = main.end();
 
-          // Adjust end-point offset based on Jacobsthal number.
-          size_t searchRangeOffset = JacobsthalNumber(jc + insertCount) - searchRangeShift;
+          // Calculate search offset based on current Jacobsthal and inserted numbers.
+          size_t searchRangeOffset = JacobsthalNumber(jc + insertCount);
+
+          // Adjust end-point if offset is within the size of main.
           if (searchRangeOffset <= main.size()) {
             end = main.begin() + searchRangeOffset;
           }
 
-          // Set pend element base on current Jacobsthal number.
+          // Set pend element based on current Jacobsthal number.
           auto pendElement = pend.begin() + insertRangeSize - 1;
 
           // Binary search the position of pend element from main.
           end = std::upper_bound(main.begin(), end, *pendElement);
 
-          // Move found element to main remove it from pend.
+          // Move found element to main and remove it from pend.
           main.insert(end, *pendElement);
           pend.erase(pendElement);
-
-          // Adjust the shift of search range by one element.
-          searchRangeShift++;
 
           // Increment the count of inserted elements by one.
           insertCount++;
 
-          // Reduce the size of chunk since element was moved.
+          // Reduce the size of insert range since element was moved.
           insertRangeSize--;
 
         }
 
-        // After processing the current chunk, move to the next Jacobsthal number.
+        // Move to next Jacobsthal number for next element.
         jc++;
 
       }
@@ -136,45 +133,65 @@ private: // sort template
   template <typename Container>
   static void sortNumbers(Container &container) {
 
+    // Tracks the current amount of pairs in element.
     static int elementSize = 1;
 
+    // Calculate the amount of elements in current recursion.
     int elementCount = container.size() / elementSize;
 
+    // Stop recursion if new elements cannot be created.
     if (elementCount < 2) {
       return;
     }
 
+    // Check if the number of elements is odd.
     bool hasOddElem = (elementCount % 2 == 1) ? true : false;
 
+    // Initial begin-point.
     auto begin = container.begin();
+
+    // Set end-point to ignore unpaired odd elements.
     auto end = begin + ((elementSize * elementCount) - (hasOddElem * elementSize));
 
+    // Iterate over all pairs of elements in container.
     for (auto it = begin; it != end; it += (elementSize * 2)) {
+      // Compare last numbers of elements, swap whole element if second is smaller.
       if (*(it + (elementSize - 1)) > *(it + (elementSize * 2 - 1))) {
         std::swap_ranges(it, it + elementSize, it + elementSize);
       }
     }
 
-    elementSize *= 2;
-    sortNumbers(container);
-    elementSize /= 2;
+    elementSize *= 2;        // Double the size of elements for each recursion.
+    sortNumbers(container);  // Recursive call.
+    elementSize /= 2;        // Devide the size of elements in recursive call-back.
 
-    Container main;
-    Container pend;
-    Container left;
+    Container main;  // Holds sorted main sequence.
+    Container pend;  // Holds pend elements for insertion.
+    Container left;  // Holds odd leftover elements.
 
+    // Initialize main with largest numbers from first two elements.
     main.push_back(*(begin + elementSize - 1));
     main.push_back(*(begin + elementSize * 2 - 1));
 
-    for (auto it = begin + elementSize * 2; it < end; it += elementSize) {
-      pend.push_back(*(it + elementSize - 1));
+    // Iterate over other elements, skip the already added elements.
+    for (auto it = begin + elementSize * 2; it != end; it += elementSize) {
+
+      // Push the last number of larger element into main.
       main.push_back(*(it + elementSize * 2 - 1));
+
+      // Push the last number of smaller element into pend.
+      pend.push_back(*(it + elementSize - 1));
+
+      // Prevent reprocessing of already handled elements by moving the iterator.
       std::advance(it, elementSize);
+
     }
 
+    // Add all of the odd elements into leftovers to combine them into main later.
     left.insert(left.end(), end + (elementSize * hasOddElem), container.end());
 
     if (hasOddElem || !pend.empty()) {
+      // Call binary insertion to merge pend and leftovers into main.
       insert(main, pend, left, container, elementSize, hasOddElem, 
              hasOddElem ? *(end + elementSize - 1) : -1);
     }
@@ -200,12 +217,3 @@ private: // numbers print template
     std::cout << std::endl;
   }
 };
-
-// if (debugMode) {
-//   std::cout << "\nrecursion: " << recursionLevel;
-//   std::cout << "\n==================\n";
-//   printNumbers("main", main);
-//   printNumbers("pend", pend);
-//   printNumbers("left", left);
-//   std::cout << "==================\n";
-// }
