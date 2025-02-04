@@ -1,6 +1,6 @@
 NAME   := PmergeMe
 
-NUMCOUNT := 10
+NUMCOUNT := 1000
 INT_MAX  := 1000
 
 RM     := rm -rf
@@ -20,8 +20,11 @@ re: fclean all
 
 run: all
 	@$(CLEAR)
-#	./$(NAME) $(shell shuf -i 0-$(INT_MAX) -n $(NUMCOUNT))
-	./$(NAME) 11 2 17 0 16 8 6 15 10 3 21 1 18 9 14 19 12 5 4 20 13 7
+	./$(NAME) $(shell shuf -i 0-$(INT_MAX) -n $(NUMCOUNT))
+
+#	https://dev.to/emuminov/human-explanation-and-step-by-step-visualisation-of-the-ford-johnson-algorithm-5g91
+#	This number set is from above mentioned article, used mainly for testing, debugging and evaluation.
+#	./$(NAME) 11 2 17 0 16 8 6 15 10 3 21 1 18 9 14 19 12 5 4 20 13 7
 
 clean:
 	$(RM) $(OBJECTS)

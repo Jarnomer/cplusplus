@@ -1,5 +1,10 @@
 #pragma once
 
+#define GREEN  "\033[32m"
+#define CYAN   "\033[36m"
+#define RED    "\033[31m"
+#define RESET  "\033[0m"
+
 #include <algorithm>
 #include <chrono>
 #include <cmath>
@@ -21,6 +26,7 @@ private: // attributes
   static std::vector<int> intVector;
   static std::deque<int> intDeque;
   static std::unordered_set<int> uniques;
+  static bool debugMode;
 
 public: // constructors
   PmergeMe(void) = delete;
@@ -43,7 +49,7 @@ private:  // override template
     Container temp; // Temporary container to hold the final result.
 
     if (hasOddElem) {
-        // Insert odd elements into main using binary search.
+        // Insert numbers of the odd element into main using binary search.
         auto end = std::upper_bound(main.begin(), main.end(), odd);
         main.insert(end, odd);
     }
@@ -125,21 +131,21 @@ private: // insert template
       }
     }
 
-    // Override the original container with elements from main and leftover.
+    // Override the original container with elements from main and left.
     override(container, main, left, elementSize, hasOddElem, odd);
 }
 
 private: // sort template
-  template <typename Container>
-  static void sortNumbers(Container &container) {
+  template <typename Container> // lvl is only used for debugging
+  static void sortNumbers(Container &container, int lvl = 0) {
 
-    // Tracks the current amount of pairs in element.
+    // Tracks the current amount of pairs of numbers in element.
     static int elementSize = 1;
 
     // Calculate the amount of elements in current recursion.
     int elementCount = container.size() / elementSize;
 
-    // Stop recursion if new elements cannot be created.
+    // Stop recursion if there isn't enough elements to compare.
     if (elementCount < 2) {
       return;
     }
@@ -147,7 +153,7 @@ private: // sort template
     // Check if the number of elements is odd.
     bool hasOddElem = (elementCount % 2 == 1) ? true : false;
 
-    // Initial begin-point.
+    // Store begin-point.
     auto begin = container.begin();
 
     // Set end-point to ignore unpaired odd elements.
@@ -161,15 +167,16 @@ private: // sort template
       }
     }
 
-    elementSize *= 2;        // Double the size of elements for each recursion.
-    sortNumbers(container);  // Recursive call.
-    elementSize /= 2;        // Devide the size of elements in recursive call-back.
+    elementSize *= 2;               // Double the size of elements for each recursion.
+    sortNumbers(container, ++lvl);  // Recursive call.
+    elementSize /= 2;               // Devide the size of elements in recursive call-back.
 
-    Container main;  // Holds sorted main sequence.
-    Container pend;  // Holds pend elements for insertion.
-    Container left;  // Holds odd leftover elements.
+    Container main;  // Holds already sorted numbers of larger elements.
+    Container pend;  // Holds pend numbers of smaller elementes for insertion.
+    Container left;  // Holds leftover numbers of odd elements.
 
     // Initialize main with largest numbers from first two elements.
+    // We know that there are no elements before them and they are already sorted.
     main.push_back(*(begin + elementSize - 1));
     main.push_back(*(begin + elementSize * 2 - 1));
 
@@ -187,14 +194,24 @@ private: // sort template
 
     }
 
-    // Add all of the odd elements into leftovers to combine them into main later.
+    // Add all numbers of the odd elements into left to combine them into main later.
     left.insert(left.end(), end + (elementSize * hasOddElem), container.end());
 
+    // Debug print all containers before insertion if debugging is enabled.
+    debugPrint("Before insert | Recursion level: " + std::to_string(lvl) + 
+               " | Element Size: " + std::to_string(elementSize),
+               container, main, pend, left, elementSize);
+    
     if (hasOddElem || !pend.empty()) {
-      // Call binary insertion to merge pend and leftovers into main.
+      // Call binary insertion to merge pend elements and leftovers into main.
       insert(main, pend, left, container, elementSize, hasOddElem, 
              hasOddElem ? *(end + elementSize - 1) : -1);
     }
+
+    // Debug print all containers after insertion if debugging is enabled.
+    debugPrint("After insert | Recursion level: " + std::to_string(lvl) + 
+               " | Element Size: " + std::to_string(elementSize),
+               container, main, pend, left, elementSize);
   }
 
 private: // duration print template
@@ -215,5 +232,53 @@ private: // numbers print template
       std::cout << num << " ";
     }
     std::cout << std::endl;
+  }
+
+private: // debug print template
+  template <typename Container>
+  static void debugPrint(const std::string &title, const Container &vec, const Container &main, 
+                         const Container &pend, const Container &left, size_t elementSize) {
+
+    if (!debugMode) {
+        return;
+    }
+
+    size_t maxSize = std::max({vec.size(), main.size(), pend.size(), left.size()});
+    size_t tableWidth = 10 + (5 * maxSize) + (maxSize / elementSize) * 2 + 1;
+
+    std::cout << GREEN << std::string(tableWidth / 2 - title.size() / 2, '=') << " " << title << " " 
+              << std::string(tableWidth / 2 - title.size() / 2 - 1, '=') << RESET << "\n";
+
+    std::cout << CYAN << std::setw(10) << "   Index  |" << RESET;
+    for (size_t i = 0; i < maxSize; ++i) {
+      std::cout << std::setw(5) << i;
+      if ((i + 1) % elementSize == 0 && i + 1 < maxSize) {
+        std::cout << " |";
+      }
+    }
+
+    std::cout << "\n" << GREEN << std::string(tableWidth + 1, '-') << RESET << "\n";
+
+    auto printRow = [&](const std::string &label, const Container &container) {
+      std::cout << CYAN << std::setw(10) << label << "|" << RESET;
+      for (size_t i = 0; i < maxSize; ++i) {
+        if (i < container.size()) {
+          std::cout << std::setw(5) << container[i];
+        } else {
+          std::cout << RED << std::setw(5) << "-" << RESET;
+        }
+        if ((i + 1) % elementSize == 0 && i + 1 < maxSize) {
+          std::cout << " |";
+        }
+      }
+      std::cout << "\n";
+    };
+
+    printRow("Vec  ", vec);
+    printRow("Main  ", main);
+    printRow("Pend  ", pend);
+    printRow("Left  ", left);
+
+    std::cout << GREEN << std::string(tableWidth, '=') << RESET << "\n";
   }
 };

@@ -4,8 +4,11 @@ std::vector<int> PmergeMe::intVector;
 std::deque<int> PmergeMe::intDeque;
 std::unordered_set<int> PmergeMe::uniques;
 
+bool PmergeMe::debugMode = false;  // debugging on/off
+
 void PmergeMe::fordJohnsonSort(int argc, char **argv) {
-  time_point_t vecStart, vecEnd, deqStart, deqEnd;
+  time_point_t vecStart, vecEnd;
+  time_point_t deqStart, deqEnd;
   parseArguments(argc, argv);
   printNumbers("Before", intVector);
   vecStart = Clock::now();

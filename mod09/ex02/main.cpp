@@ -1,7 +1,5 @@
 #include "PmergeMe.hpp"
 
-// https://dev.to/emuminov/human-explanation-and-step-by-step-visualisation-of-the-ford-johnson-algorithm-5g91
-
 int main(int argc, char **argv) {
   if (argc < 2) {
     std::cout << "usage: ./PmergeMe <numbers>";
