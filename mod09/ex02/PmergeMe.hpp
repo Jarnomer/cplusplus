@@ -41,38 +41,12 @@ private: // private utils
   static void parseArguments(int argc, char **argv);
   static int JacobsthalNumber(int k);
 
-private:  // override template
-  template <typename Container>
-  static void override(Container &container, Container &main, Container &left,
-                       int elementSize, bool hasOddElem, int odd) {
-
-    Container temp; // Temporary container to hold the final result.
-
-    if (hasOddElem) {
-        // Insert numbers of the odd element into main using binary search.
-        auto end = std::upper_bound(main.begin(), main.end(), odd);
-        main.insert(end, odd);
-    }
-
-    // Populate the temporary container with chunks from the main.
-    for (auto it = main.begin(); it != main.end(); ++it) {
-        // Find the corresponding element from container and insert the chunk into temp.
-        auto itf = std::find(container.begin(), container.end(), *it);
-        temp.insert(temp.end(), itf - (elementSize - 1), itf + 1);
-    }
-
-    // Append the leftover elements to temp.
-    temp.insert(temp.end(), left.begin(), left.end());
-
-    // Override the original container with temp.
-    container = temp;
-}
-
 private: // insert template
   template <typename Container>
-  static void insert(Container &main, Container &pend, Container &left,
+  static void insertNumbers(Container &main, Container &pend, Container &left,
                      Container &container, int elementSize, bool hasOddElem, int odd,
-                     size_t jc = 3, size_t insertCount = 0, size_t insertRangeSize = 0) {
+                     size_t jc = 3, size_t insertedNumbers = 0, size_t boundDecrement = 0,
+                     size_t numberChunkSize = 0, size_t searchDistance = 0) {
 
     if (pend.size() == 1) {
 
@@ -82,62 +56,88 @@ private: // insert template
 
     } else {
 
-      // Loop till all elements from pend to are moved to main.
+      // Loop till all the biggest numbers of smaller elements from pend to are moved to main.
       while (!pend.empty()) {
 
         // Size of the current chunk of numbers to be inserted based on Jacobsthal sequence.
-        insertRangeSize = JacobsthalNumber(jc) - JacobsthalNumber(jc - 1);
+        numberChunkSize = JacobsthalNumber(jc) - JacobsthalNumber(jc - 1);
 
         // Adjust chunk size if it exceeds the remaining pend.
-        if (insertRangeSize > pend.size()) {
-          insertRangeSize = pend.size();
+        if (numberChunkSize > pend.size()) {
+          numberChunkSize = pend.size();
         }
 
-        // Inner loop to process the current chunk.
-        while (insertRangeSize) {
+        // Comment here...
+        boundDecrement = 0;
+
+        // Inner loop to process the current chunk of numbers.
+        while (numberChunkSize > 0) {
+
+          // Search distance based on current Jacobsthal and inserted numbers.
+          searchDistance = JacobsthalNumber(jc + insertedNumbers) - boundDecrement;
 
           // Initial end-point is the end of main.
           auto end = main.end();
 
-          // Calculate search offset based on current Jacobsthal and inserted numbers.
-          size_t searchRangeOffset = JacobsthalNumber(jc + insertCount);
-
-          // Adjust end-point if offset is within the size of main.
-          if (searchRangeOffset <= main.size()) {
-            end = main.begin() + searchRangeOffset;
+          // Adjust the end-point if distance is within the size of main.
+          if (searchDistance <= main.size()) {
+            end = main.begin() + searchDistance;
           }
 
-          // Set pend element based on current Jacobsthal number.
-          auto pendElement = pend.begin() + insertRangeSize - 1;
+          // Pend number to be found based on remaining chunk size.
+          auto targetElement = pend.begin() + numberChunkSize - 1;
 
-          // Binary search the position of pend element from main.
-          end = std::upper_bound(main.begin(), end, *pendElement);
+          // Binary search the position of pend number from main.
+          end = std::upper_bound(main.begin(), end, *targetElement);
 
-          // Move found element to main and remove it from pend.
-          main.insert(end, *pendElement);
-          pend.erase(pendElement);
+          // Move found number to main and remove it from pend.
+          main.insert(end, *targetElement);
+          pend.erase(targetElement);
 
-          // Increment the count of inserted elements by one.
-          insertCount++;
+          // Increment the count of inserted numbers.
+          insertedNumbers++;
 
-          // Reduce the size of insert range since element was moved.
-          insertRangeSize--;
+          // Comment here...
+          boundDecrement++;
+
+          // Reduce the chunk size since element was moved.
+          numberChunkSize--;
 
         }
 
-        // Move to next Jacobsthal number for next element.
+        // Move to next Jacobsthal number for next chunk.
         jc++;
 
       }
     }
 
-    // Override the original container with elements from main and left.
-    override(container, main, left, elementSize, hasOddElem, odd);
+    Container temp; // Temporary container to hold the final result.
+
+    if (hasOddElem) {
+        // Insert largest number of odd element into main.
+        // Using binary search, since it does not have a pair.
+        auto end = std::upper_bound(main.begin(), main.end(), odd);
+        main.insert(end, odd);
+    }
+
+    // Populate the temp with elements from main, which holds sorted.
+    for (auto it = main.begin(); it != main.end(); ++it) {
+        // Find the corresponding largest number from current container.
+        // Insert it and previous numbers based on element size to temp.
+        auto itf = std::find(container.begin(), container.end(), *it);
+        temp.insert(temp.end(), itf - (elementSize - 1), itf + 1);
+    }
+
+    // Append all of the leftover numbers from left to the end of temp.
+    temp.insert(temp.end(), left.begin(), left.end());
+
+    // Override the original container with temp.
+    container = temp;
 }
 
 private: // sort template
   template <typename Container> // lvl is only used for debugging
-  static void sortNumbers(Container &container, int lvl = 0) {
+  static void sortNumbers(Container &container, int lvl = -1) {
 
     // Tracks the current amount of pairs of numbers in element.
     static int elementSize = 1;
@@ -171,16 +171,16 @@ private: // sort template
     sortNumbers(container, ++lvl);  // Recursive call.
     elementSize /= 2;               // Devide the size of elements in recursive call-back.
 
-    Container main;  // Holds already sorted numbers of larger elements.
-    Container pend;  // Holds pend numbers of smaller elementes for insertion.
-    Container left;  // Holds leftover numbers of odd elements.
+    Container main;  // Holds already sorted numbers from larger elements.
+    Container pend;  // Holds pend numbers from smaller elementes for insertion.
+    Container left;  // Holds leftover odd numbers which were not paired.
 
     // Initialize main with largest numbers from first two elements.
-    // We know that there are no elements before them and they are already sorted.
+    // There are no elements before them and they are already sorted.
     main.push_back(*(begin + elementSize - 1));
     main.push_back(*(begin + elementSize * 2 - 1));
 
-    // Iterate over other elements, skip the already added elements.
+    // Loop through other largest numbers in remaining elements.
     for (auto it = begin + elementSize * 2; it != end; it += elementSize) {
 
       // Push the last number of larger element into main.
@@ -189,7 +189,7 @@ private: // sort template
       // Push the last number of smaller element into pend.
       pend.push_back(*(it + elementSize - 1));
 
-      // Prevent reprocessing of already handled elements by moving the iterator.
+      // Jump to next element pair by advancing the iterator.
       std::advance(it, elementSize);
 
     }
@@ -204,7 +204,7 @@ private: // sort template
     
     if (hasOddElem || !pend.empty()) {
       // Call binary insertion to merge pend elements and leftovers into main.
-      insert(main, pend, left, container, elementSize, hasOddElem, 
+      insertNumbers(main, pend, left, container, elementSize, hasOddElem, 
              hasOddElem ? *(end + elementSize - 1) : -1);
     }
 

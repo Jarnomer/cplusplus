@@ -4,7 +4,7 @@ std::vector<int> PmergeMe::intVector;
 std::deque<int> PmergeMe::intDeque;
 std::unordered_set<int> PmergeMe::uniques;
 
-bool PmergeMe::debugMode = false;  // debugging on/off
+bool PmergeMe::debugMode = true;  // debugging on/off
 
 void PmergeMe::fordJohnsonSort(int argc, char **argv) {
   time_point_t vecStart, vecEnd;
