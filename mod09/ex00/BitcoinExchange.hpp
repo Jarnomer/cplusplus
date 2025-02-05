@@ -25,7 +25,8 @@ private: // utils
   bool isValidDate(const std::string &date) const;
   bool isLeapYear(int year) const;
   bool isValidValue(double amount) const;
-  std::string trimWhiteSpace(std::string &line) const;
+  const std::string trimWhiteSpace(const std::string &line) const;
+  const std::string isAllDigits(const std::string &str) const;
 
 private: // parser
   void readInput(const std::string &fileName, char delim,

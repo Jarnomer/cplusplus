@@ -1,12 +1,8 @@
 #include "BitcoinExchange.hpp"
 
-BitcoinExchange::BitcoinExchange(void) {
-  std::cout << "Default constructor called\n";
-}
+BitcoinExchange::BitcoinExchange(void) {}
 
-BitcoinExchange::~BitcoinExchange(void) {
-  std::cout << "Deconstructor called\n";
-}
+BitcoinExchange::~BitcoinExchange(void) {}
 
 void BitcoinExchange::readInput(
     const std::string &fileName, char delim,
@@ -22,12 +18,12 @@ void BitcoinExchange::readInput(
         std::cerr << "Invalid line format: " << line << "\n";
       } else if (isValidDate(trimWhiteSpace(date))) {
         try {
-          double amount = std::stod(trimWhiteSpace(value));
+          double amount = std::stod(isAllDigits(trimWhiteSpace(value)));
           import_or_print(date, amount);
         } catch (const std::invalid_argument &e) {
-          std::cerr << "Invalid argument: " << value << "\n";
+          std::cerr << "Invalid argument:" << value << "\n";
         } catch (const std::out_of_range &e) {
-          std::cerr << "Out of range: " << value << "\n";
+          std::cerr << "Out of range:" << value << "\n";
         }
       }
     }
@@ -76,7 +72,7 @@ bool BitcoinExchange::isValidDate(const std::string &date) const {
     int month = std::stoi(match[2].str());
     int day = std::stoi(match[3].str());
     int days[] = {31, (isLeapYear(year) ? 29 : 28),
-      31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+                  31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (month < 1 || month > 12 || day < 1 || day > days[month - 1]) {
       std::cerr << "Invalid date: " << date << "\n";
       return false;
@@ -99,7 +95,15 @@ bool BitcoinExchange::isLeapYear(int year) const {
   return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
 }
 
-std::string BitcoinExchange::trimWhiteSpace(std::string &str) const {
-  str = std::regex_replace(str, std::regex("^[ \t]+|[ \t]+$"), "");
-  return str;
+const std::string BitcoinExchange::trimWhiteSpace(const std::string &str) const {
+  return std::regex_replace(str, std::regex("^[ \t]+|[ \t]+$"), "");
+}
+
+const std::string BitcoinExchange::isAllDigits(const std::string &str) const {
+  std::regex pattern("^[0-9]+(\\.[0-9]+)?$");
+  if (!std::regex_match(str, pattern)) {
+    throw std::invalid_argument("");
+  } else {
+    return str;
+  }
 }
