@@ -175,7 +175,7 @@ private: // sort template
       }
     }
 
-    // Debug print original vector before sorting if debugging is enabled.
+    // Debug print original vector after sorting if debugging is enabled.
     debugPrintSort("After sort | Recursion level: " + std::to_string(recursionLevel) + 
                " | Element Size: " + std::to_string(elementSize), container, elementSize);
 
