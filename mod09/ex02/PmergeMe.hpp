@@ -45,7 +45,7 @@ private: // insert template
   template <typename Container>
   static void insertNumbers(Container &main, Container &pend, Container &left,
                      Container &container, int elementSize, bool hasOddElem, int odd,
-                     size_t jc = 3, size_t insertedNumbers = 0, size_t boundDecrement = 0,
+                     size_t jc = 3, size_t insertedNumbers = 0, size_t boundaryDecrement = 0,
                      size_t numberChunkSize = 0, size_t searchDistance = 0) {
 
     if (pend.size() == 1) {
@@ -67,14 +67,14 @@ private: // insert template
           numberChunkSize = pend.size();
         }
 
-        // Comment here...
-        boundDecrement = 0;
+        // Decrease the total boundary of search distance based on inserted numbers.
+        boundaryDecrement = 0;
 
         // Inner loop to process the current chunk of numbers.
         while (numberChunkSize > 0) {
 
           // Search distance based on current Jacobsthal and inserted numbers.
-          searchDistance = JacobsthalNumber(jc + insertedNumbers) - boundDecrement;
+          searchDistance = JacobsthalNumber(jc + insertedNumbers) - boundaryDecrement;
 
           // Initial end-point is the end of main.
           auto end = main.end();
@@ -97,8 +97,8 @@ private: // insert template
           // Increment the count of inserted numbers.
           insertedNumbers++;
 
-          // Comment here...
-          boundDecrement++;
+          // Increase boundary decrement to adjust search distance.
+          boundaryDecrement++;
 
           // Reduce the chunk size since element was moved.
           numberChunkSize--;
@@ -194,7 +194,7 @@ private: // sort template
 
     }
 
-    // Add all numbers of the odd elements into left to combine them into main later.
+    // Add all numbers of the odd element into left to combine them into main later.
     left.insert(left.end(), end + (elementSize * hasOddElem), container.end());
 
     // Debug print all containers before insertion if debugging is enabled.

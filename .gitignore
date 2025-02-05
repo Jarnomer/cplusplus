@@ -7,6 +7,8 @@ sed
 harl
 harlFilter
 stack
+btc
+RPN
 PmergeMe
 *.o
 *.vscode
