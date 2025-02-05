@@ -44,7 +44,7 @@ private: // private utils
 private: // insert template
   template <typename Container>
   static void insertNumbers(Container &main, Container &pend, Container &left,
-                     Container &container, int elementSize, bool hasOddElem, int odd,
+                     Container &container, int elementSize, bool hasOddElem, int largestOddElem,
                      size_t jc = 3, size_t insertedNumbers = 0, size_t boundaryDecrement = 0,
                      size_t numberChunkSize = 0, size_t searchDistance = 0) {
 
@@ -116,8 +116,8 @@ private: // insert template
     if (hasOddElem) {
         // Insert largest number of odd element into main.
         // Using binary search, since it does not have a pair.
-        auto end = std::upper_bound(main.begin(), main.end(), odd);
-        main.insert(end, odd);
+        auto end = std::upper_bound(main.begin(), main.end(), largestOddElem);
+        main.insert(end, largestOddElem);
     }
 
     // Populate the temp with elements from main, which holds sorted.
@@ -136,8 +136,8 @@ private: // insert template
 }
 
 private: // sort template
-  template <typename Container> // lvl is only used for debugging
-  static void sortNumbers(Container &container, int lvl = -1) {
+  template <typename Container> // recursionLevel is only used for debugging
+  static void sortNumbers(Container &container, int recursionLevel = 0) {
 
     // Tracks the current amount of pairs of numbers in element.
     static int elementSize = 1;
@@ -147,6 +147,10 @@ private: // sort template
 
     // Stop recursion if there isn't enough elements to compare.
     if (elementCount < 2) {
+      if (debugMode) {
+        std::cout << CYAN << "\nCan't create enough pairs to compare elements for next recursion level "
+                  << RED << recursionLevel + 1 << CYAN << ", begin recursive call-back.\n\n";
+      }
       return;
     }
 
@@ -159,6 +163,10 @@ private: // sort template
     // Set end-point to ignore unpaired odd elements.
     auto end = begin + ((elementSize * elementCount) - (hasOddElem * elementSize));
 
+    // Debug print original vector before sorting if debugging is enabled.
+    debugPrintSort("Before sort | Recursion level: " + std::to_string(recursionLevel) + 
+               " | Element Size: " + std::to_string(elementSize), container, elementSize);
+
     // Iterate over all pairs of elements in container.
     for (auto it = begin; it != end; it += (elementSize * 2)) {
       // Compare last numbers of elements, swap whole element if second is smaller.
@@ -167,9 +175,13 @@ private: // sort template
       }
     }
 
-    elementSize *= 2;               // Double the size of elements for each recursion.
-    sortNumbers(container, ++lvl);  // Recursive call.
-    elementSize /= 2;               // Devide the size of elements in recursive call-back.
+    // Debug print original vector before sorting if debugging is enabled.
+    debugPrintSort("After sort | Recursion level: " + std::to_string(recursionLevel) + 
+               " | Element Size: " + std::to_string(elementSize), container, elementSize);
+
+    elementSize *= 2;                          // Double the size of elements for each recursion.
+    sortNumbers(container, ++recursionLevel);  // Recursive call.
+    elementSize /= 2;                          // Devide the size of elements in recursive call-back.
 
     Container main;  // Holds already sorted numbers from larger elements.
     Container pend;  // Holds pend numbers from smaller elementes for insertion.
@@ -198,9 +210,9 @@ private: // sort template
     left.insert(left.end(), end + (elementSize * hasOddElem), container.end());
 
     // Debug print all containers before insertion if debugging is enabled.
-    debugPrint("Before insert | Recursion level: " + std::to_string(lvl) + 
-               " | Element Size: " + std::to_string(elementSize),
-               container, main, pend, left, elementSize);
+    debugPrintInsert("Before insert | Recursion level: " + std::to_string(recursionLevel) + 
+                     " | Element Size: " + std::to_string(elementSize),
+                     container, main, pend, left, elementSize);
     
     if (hasOddElem || !pend.empty()) {
       // Call binary insertion to merge pend elements and leftovers into main.
@@ -209,9 +221,9 @@ private: // sort template
     }
 
     // Debug print all containers after insertion if debugging is enabled.
-    debugPrint("After insert | Recursion level: " + std::to_string(lvl) + 
-               " | Element Size: " + std::to_string(elementSize),
-               container, main, pend, left, elementSize);
+    debugPrintInsert("After insert | Recursion level: " + std::to_string(recursionLevel) + 
+                     " | Element Size: " + std::to_string(elementSize),
+                     container, main, pend, left, elementSize);
   }
 
 private: // duration print template
@@ -236,7 +248,51 @@ private: // numbers print template
 
 private: // debug print template
   template <typename Container>
-  static void debugPrint(const std::string &title, const Container &vec, const Container &main, 
+  static void debugPrintSort(const std::string &title, const Container &vec, size_t elementSize) {
+
+    if (!debugMode) {
+        return;
+    }
+
+    size_t maxSize = std::max({vec.size()});
+    size_t tableWidth = 10 + (5 * maxSize) + (maxSize / elementSize) * 2 + 1;
+
+    std::cout << GREEN << std::string(tableWidth / 2 - title.size() / 2, '=') << " " << title << " " 
+              << std::string(tableWidth / 2 - title.size() / 2 - 1, '=') << RESET << "\n";
+
+    std::cout << CYAN << std::setw(10) << "   Index  |" << RESET;
+    for (size_t i = 0; i < maxSize; ++i) {
+      std::cout << std::setw(5) << i;
+      if ((i + 1) % elementSize == 0 && i + 1 < maxSize) {
+        std::cout << " |";
+      }
+    }
+
+    std::cout << "\n" << GREEN << std::string(tableWidth + 1, '-') << RESET << "\n";
+
+    auto printRow = [&](const std::string &label, const Container &container) {
+      std::cout << CYAN << std::setw(10) << label << "|" << RESET;
+      for (size_t i = 0; i < maxSize; ++i) {
+        if (i < container.size()) {
+          std::cout << std::setw(5) << container[i];
+        } else {
+          std::cout << RED << std::setw(5) << "-" << RESET;
+        }
+        if ((i + 1) % elementSize == 0 && i + 1 < maxSize) {
+          std::cout << " |";
+        }
+      }
+      std::cout << "\n";
+    };
+
+    printRow("Vec  ", vec);
+
+    std::cout << GREEN << std::string(tableWidth, '=') << RESET << "\n";
+  }
+
+private: // debug print template
+  template <typename Container>
+  static void debugPrintInsert(const std::string &title, const Container &vec, const Container &main, 
                          const Container &pend, const Container &left, size_t elementSize) {
 
     if (!debugMode) {

@@ -4,22 +4,26 @@ std::vector<int> PmergeMe::intVector;
 std::deque<int> PmergeMe::intDeque;
 std::unordered_set<int> PmergeMe::uniques;
 
-bool PmergeMe::debugMode = false;  // debugging on/off
+bool PmergeMe::debugMode = true;  // debugging on/off
 
 void PmergeMe::fordJohnsonSort(int argc, char **argv) {
-  time_point_t vecStart, vecEnd;
-  time_point_t deqStart, deqEnd;
   parseArguments(argc, argv);
-  printNumbers("Before", intVector);
-  vecStart = Clock::now();
-  sortNumbers(intVector);
-  vecEnd = Clock::now();
-  deqStart = Clock::now();
-  sortNumbers(intDeque);
-  deqEnd = Clock::now();
-  printNumbers("After", intVector);
-  printDuration("std::vector", intVector, vecStart, vecEnd);
-  printDuration("std::deque", intDeque, deqStart, deqEnd);
+  if (debugMode) {
+    sortNumbers(intVector);
+  } else {
+    time_point_t vecStart, vecEnd;
+    time_point_t deqStart, deqEnd;
+    printNumbers("Before", intVector);
+    vecStart = Clock::now();
+    sortNumbers(intVector);
+    vecEnd = Clock::now();
+    deqStart = Clock::now();
+    sortNumbers(intDeque);
+    deqEnd = Clock::now();
+    printNumbers("After", intVector);
+    printDuration("std::vector", intVector, vecStart, vecEnd);
+    printDuration("std::deque", intDeque, deqStart, deqEnd);
+  }
 }
 
 void PmergeMe::parseArguments(int argc, char **argv) {

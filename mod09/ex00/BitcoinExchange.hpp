@@ -14,6 +14,8 @@ private:
 
 public: // constructors
   BitcoinExchange(void);
+  BitcoinExchange(const BitcoinExchange &other) = delete;
+  BitcoinExchange &operator=(const BitcoinExchange &other) = delete;
   ~BitcoinExchange(void);
 
 public: // methods

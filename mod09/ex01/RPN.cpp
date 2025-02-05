@@ -67,16 +67,32 @@ int RPN::performOperation(int a, int b, char op) {
 
 bool RPN::willOverflow(int a, int b, char op) {
   switch (op) {
-  case '*':
-    return (b != 0 && a > std::numeric_limits<int>::max() / b);
-  case '+':
-    return (a > std::numeric_limits<int>::max() - b);
-  case '-':
-    return (a < std::numeric_limits<int>::min() + b);
-  case '/':
-    return (b == 0);
-  default:
-    return false;
+    case '*':
+      if (b > 0) {
+        return (a > std::numeric_limits<int>::max() / b ||
+                a < std::numeric_limits<int>::min() / b);
+      } else if (b < 0) {
+        return (a < std::numeric_limits<int>::max() / b ||
+                a > std::numeric_limits<int>::min() / b);
+      } else {
+        return false;
+      }
+    case '+':
+      if (b > 0) {
+        return (a > std::numeric_limits<int>::max() - b);
+      } else {
+        return (a < std::numeric_limits<int>::min() - b);
+      }
+    case '-':
+      if (b > 0) {
+        return (a < std::numeric_limits<int>::min() + b);
+      } else {
+        return (a > std::numeric_limits<int>::max() + b);
+      }
+    case '/':
+      return (b == 0 || (a == std::numeric_limits<int>::min() && b == -1));
+    default:
+      return false;
   }
 }
 
