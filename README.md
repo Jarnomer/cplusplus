@@ -47,18 +47,18 @@ cd cplusplus/mod00/ex00 && make all
 
 ## 🚀 Details
 
-| Module Number | Topics                                                        |
-|---------------|---------------------------------------------------------------|
-| Module 00     | Classes, member functions, access specifiers, and streams     |
-| Module 01     | Memory management, pointers, and references                   |
+| Module        | Topics                                                          |
+|---------------|-----------------------------------------------------------------|
+| Module 00     | Classes, member functions, access specifiers, and streams       |
+| Module 01     | Memory management, pointers, and references                     |
 | Module 02     | Orthodox canonical form, polymorphism, and operator overloading |
-| Module 03     | Inheritance                                                   |
-| Module 04     | Polymorphism, abstract classes, and interfaces                |
-| Module 05     | Custom exceptions and exception handling                      |
-| Module 06     | Type casting                                                  |
-| Module 07     | Templates                                                     |
-| Module 08     | Containers, algorithm library, and iterators                  |
-| Module 09     | STL Standard Template Library with containers                 |
+| Module 03     | Inheritance                                                     |
+| Module 04     | Polymorphism, abstract classes and interfaces                   |
+| Module 05     | Custom exceptions and exception handling                        |
+| Module 06     | Type casting                                                    |
+| Module 07     | Templates                                                       |
+| Module 08     | Containers, algorithm library and iterators                     |
+| Module 09     | STL Standard Template Library with containers                   |
 
 ## ♻️ Resources
 
