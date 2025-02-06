@@ -49,9 +49,9 @@ cd cplusplus/mod00/ex00 && make all
 
 | Module        | Topics                                                          |
 |---------------|-----------------------------------------------------------------|
-| Module 00     | Classes, member functions, access specifiers, and streams       |
-| Module 01     | Memory management, pointers, and references                     |
-| Module 02     | Orthodox canonical form, polymorphism, and operator overloading |
+| Module 00     | Classes, member functions, access specifiers and streams        |
+| Module 01     | Memory management, pointers and references                      |
+| Module 02     | Orthodox canonical form, polymorphism and operator overloading  |
 | Module 03     | Inheritance                                                     |
 | Module 04     | Polymorphism, abstract classes and interfaces                   |
 | Module 05     | Custom exceptions and exception handling                        |
