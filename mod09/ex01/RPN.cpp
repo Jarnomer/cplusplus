@@ -2,7 +2,7 @@
 
 std::stack<int> RPN::stack;
 std::string RPN::number;
-const std::string RPN::tokens = "+-/*";
+const std::string RPN::operands = "+-/*";
 
 void RPN::calculate(const std::string &expression) {
   for (char c : expression) {
@@ -30,7 +30,7 @@ void RPN::appendStack(const std::string &value) {
 }
 
 bool RPN::isValidOperation(char c) {
-  if (tokens.find(c) == std::string::npos || stack.size() < 2) {
+  if (operands.find(c) == std::string::npos || stack.size() < 2) {
     throw std::invalid_argument("Syntax error");
   } else {
     return true;
@@ -39,9 +39,9 @@ bool RPN::isValidOperation(char c) {
 
 void RPN::performCalculation(char op) {
   int a, b, result;
-  b = stack.top();
-  stack.pop();
   a = stack.top();
+  stack.pop();
+  b = stack.top();
   stack.pop();
   result = performOperation(a, b, op);
   stack.push(result);

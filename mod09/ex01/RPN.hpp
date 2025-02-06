@@ -10,7 +10,7 @@ class RPN {
 private:
   static std::stack<int> stack;
   static std::string number;
-  static const std::string tokens;
+  static const std::string operands;
 
 public:
   RPN(void) = delete;
