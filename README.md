@@ -47,41 +47,45 @@ cd cplusplus/mod00/ex00 && make all
 
 ## 🚀 Details
 
+### Module 00
+
+Classes, member functions, access specifiers and streams.
+
 ### Module 01
 
-Teaches the basics of `classes` and `iostream`.
+Memory management, pointers and references.
 
 ### Module 02
 
-Teaches `memory allocation` with new and delete.
+Orthodox canonical form, polymorphism and operator overloading.
 
 ### Module 03
 
-Teaches 'inheritance' with multiple classes.
+Inheritance.
 
 ### Module 04
 
-What?
+Polymorphism, abstract classes and interfaces.
 
 ### Module 05
 
-Teaches 'expection handling' with try-catch and throw.
+Custom expections and exception handling.
 
 ### Module 06
 
-What?
+Type casting.
 
 ### Module 07
 
-Teaches 'template functions' within header files.
+Templates.
 
 ### Module 08
 
-What?
+Containers, algorithm library and iterators.
 
 ### Module 09
 
-What?
+STL Standard Template Library with containers.
 
 ## ♻️ Resources
 
@@ -90,6 +94,8 @@ What?
 [CppReference](https://en.cppreference.com/w/) best reference documentation with simple search.
 
 [The C++ Programming language](https://www.youtube.com/watch?v=LGOgNqkRMs0&list=PLvv0ScY6vfd8j-tlhYVPYgiIyXduu6m-L) excellent video playlist by Mike Shah.
+
+[Ford-Johnson](https://dev.to/emuminov/human-explanation-and-step-by-step-visualisation-of-the-ford-johnson-algorithm-5g91) Medium article on sorting algorithm for mod09/ex02.
 
 ## 4️⃣2️⃣ Footer
 
