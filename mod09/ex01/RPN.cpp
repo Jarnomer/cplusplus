@@ -39,9 +39,9 @@ bool RPN::isValidOperation(char c) {
 
 void RPN::performCalculation(char op) {
   int a, b, result;
-  a = stack.top();
-  stack.pop();
   b = stack.top();
+  stack.pop();
+  a = stack.top();
   stack.pop();
   result = performOperation(a, b, op);
   stack.push(result);
